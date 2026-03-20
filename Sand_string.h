@@ -20,3 +20,12 @@ void sand_string_destroy( Sand_string_t* string );
 
 //------------------------------------------------------------------------------
 void sand_string_append( Sand_string_t* string, const char* str );
+
+//------------------------------------------------------------------------------
+void sand_string_left_trim( Sand_string_t* string, char ch );
+
+//------------------------------------------------------------------------------
+void sand_string_right_trim( Sand_string_t* string, char ch );
+
+//------------------------------------------------------------------------------
+void sand_string_trim( Sand_string_t* string, char ch );
