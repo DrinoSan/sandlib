@@ -29,3 +29,12 @@ void sand_string_right_trim( Sand_string_t* string, char ch );
 
 //------------------------------------------------------------------------------
 void sand_string_trim( Sand_string_t* string, char ch );
+
+//------------------------------------------------------------------------------
+void sand_string_left_trim_cstr( char* string, char ch );
+
+//------------------------------------------------------------------------------
+void sand_string_right_trim_cstr( char* string, char ch );
+
+//------------------------------------------------------------------------------
+void sand_string_trim_cstr( char* string, char ch );

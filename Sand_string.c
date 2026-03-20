@@ -140,3 +140,86 @@ void sand_string_trim( Sand_string_t* string, char ch )
 
    sand_string_right_trim( string, ch );
 }
+
+//------------------------------------------------------------------------------
+void sand_string_left_trim_cstr( char* string, char ch )
+{
+   if ( *string == '\0' )
+   {
+      return;
+   }
+
+   const char* begin = string;
+   // H e l l o \0 = 6
+
+   if ( ch == 0 )
+   {
+      while ( isspace( ( unsigned char ) *begin ) )
+      {
+         begin++;
+      }
+   }
+   else
+   {
+      while ( *begin == ch )
+      {
+         begin++;
+      }
+   }
+
+   // All whitespace
+   if ( *begin == 0 )
+   {
+      string[ 0 ] = '\0';
+      return;
+   }
+
+   size_t len = strlen( begin );
+   memmove( string, begin, len + 1 );
+}
+
+//------------------------------------------------------------------------------
+void sand_string_right_trim_cstr( char* string, char ch )
+{
+   if ( *string == '\0' )
+   {
+      return;
+   }
+
+   const char* end = string + strlen( string ) - 1;
+
+   if ( ch == 0 )
+   {
+      while ( end >= string && isspace( ( unsigned char ) *end ) )
+      {
+         end--;
+      }
+   }
+   else
+   {
+      while ( end >= string && *end == ch )
+      {
+         end--;
+      }
+   }
+
+   if ( end < string )
+   {
+      string[ 0 ] = '\0';
+      return;
+   }
+
+   size_t new_len        = end - string;
+   string[ new_len + 1 ] = 0;
+}
+
+//------------------------------------------------------------------------------
+void sand_string_trim_cstr( char* string, char ch )
+{
+   sand_string_left_trim_cstr( string, ch );
+   if ( strlen( string ) == 0 )
+   {
+      return;
+   }
+   sand_string_right_trim_cstr( string, ch );
+}
