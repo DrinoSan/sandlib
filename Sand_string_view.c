@@ -1,12 +1,13 @@
-#include <stddef.h>
 #include <ctype.h>
+#include <stddef.h>
+#include <stdio.h>
 
 #include "Sand_string_view.h"
 
 //------------------------------------------------------------------------------
 void sand_string_view_left_trim( sand_string_view_t* sv, char ch )
 {
-   if ( *sv->data == '\0' )
+   if ( sv->size == 0 )
    {
       return;
    }
@@ -45,12 +46,15 @@ void sand_string_view_left_trim( sand_string_view_t* sv, char ch )
 //------------------------------------------------------------------------------
 void sand_string_view_right_trim( sand_string_view_t* sv, char ch )
 {
-   if ( *(sv->data + sv->size) == '\0' )
+   if ( sv->size == 0 )
    {
       return;
    }
 
-   char* end = sv->data + sv->size;
+   // -1 because if word has 4 letter like "SAND" then sv->data[sv->size] would
+   // now be the last char but the char after that which is UB and also start
+   // index is 0 therefore -1 is needed
+   char* end = sv->data + sv->size - 1;
 
    if ( ch == 0 )
    {
