@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 void sand_grow_string( Sand_string_t* string, int32_t len )
 {
+   // @TODO: why not just always append with len as len + size * 2
    if ( ( int32_t ) ( string->capacity * 2 ) <=
         ( int32_t ) ( string->size + len ) )
    {
@@ -44,7 +45,12 @@ void sand_string_destroy( Sand_string_t* string )
 //------------------------------------------------------------------------------
 void sand_string_append( Sand_string_t* string, const char* str )
 {
-   const int32_t len = strlen( str );
+   sand_string_append_n( string, str, strlen( str ) );
+}
+
+//------------------------------------------------------------------------------
+void sand_string_append_n( Sand_string_t* string, const char* str, size_t len )
+{
    if ( ( int32_t ) ( string->size + len ) >= string->capacity )
    {
       sand_grow_string( string, len );
@@ -58,7 +64,7 @@ void sand_string_append( Sand_string_t* string, const char* str )
       return;
    }
 
-   strcat( string->data, str );
+   memcpy( string->data + string->size, str, len );
    string->size += len;
 }
 
