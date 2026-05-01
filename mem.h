@@ -1,6 +1,6 @@
 #ifndef MEM_INCLUDE
 #define MEM_INCLUDE
-// #include "except.h"
+#include "except.h"
 
 extern const sand_except_t Mem_Failed;
 

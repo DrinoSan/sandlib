@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "Sand_string.h"
+#include "mem.h"
 
 //------------------------------------------------------------------------------
 void sand_grow_string( Sand_string_t* string, int32_t len )
@@ -14,7 +15,7 @@ void sand_grow_string( Sand_string_t* string, int32_t len )
    {
       // I need to allocate more than just * 2
       string->capacity = string->capacity + len * 2;
-      string->data     = realloc( string->data, string->capacity );
+      string->data     = ALLOC( string->capacity );
       assert( string->data != NULL );
       return;
    }
