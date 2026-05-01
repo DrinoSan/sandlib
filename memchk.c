@@ -66,8 +66,8 @@ void sand_mem_free( void* ptr, const char* file, int line )
       if ( ( ( uintptr_t ) ptr ) % ( sizeof( union align ) ) != 0 ||
            ( bp = find( ptr ) ) == NULL || bp->free )
       {
+         sand_except_raise( &sand_mem_failed, file, line );
          // sand_except_raise( &sand_assert_faild, file, line );
-         assert( 0 );
       }
 
       bp->free      = freelist.free;
@@ -86,8 +86,8 @@ void* sand_mem_resize( void* ptr, long nbytes, const char* file, int line )
    if ( ( ( uintptr_t ) ptr ) % ( sizeof( union align ) ) != 0 ||
         ( bp = find( ptr ) ) == NULL || bp->free )
    {
+      sand_except_raise( &sand_mem_failed, file, line );
       // sand_except_raise( &sand_assert_faild, file, line );
-      assert( 0 );
    }
 
    newptr = sand_mem_alloc( nbytes, file, line );
