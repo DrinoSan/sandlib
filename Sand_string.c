@@ -15,13 +15,13 @@ void sand_grow_string( Sand_string_t* string, int32_t len )
    {
       // I need to allocate more than just * 2
       string->capacity = string->capacity + len * 2;
-      string->data     = ALLOC( string->capacity );
+      RESIZE( string->data, string->capacity );
       assert( string->data != NULL );
       return;
    }
 
    string->capacity *= 2;
-   string->data = realloc( string->data, string->capacity );
+   RESIZE( string->data, string->capacity );
    assert( string->data != NULL );
 }
 

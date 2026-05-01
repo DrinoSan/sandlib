@@ -22,6 +22,6 @@ void* sand_mem_resize( void* ptr, long nbytes, const char* file, int line );
 
 #define FREE(ptr) ((void)(sand_mem_free((ptr), __FILE__, __LINE__), (ptr) = 0 ))
 
-#define RESIZE( ptr, nbytes ) ((ptr) = sand_meme_resize( (ptr), (nbytes), __FILE__, __LINE__ ) )
+#define RESIZE( ptr, nbytes ) ((ptr) = sand_mem_resize( (ptr), (nbytes), __FILE__, __LINE__ ) )
 
 #endif
