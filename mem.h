@@ -10,7 +10,7 @@ void* sand_mem_calloc( long count, long nbytes, const char* file, int line );
 
 void sand_mem_free( void* ptr, const char* file, int line );
 
-void sand_mem_resize( void* ptr, long nbytes, const char* file, int line );
+void* sand_mem_resize( void* ptr, long nbytes, const char* file, int line );
 
 #define ALLOC( nbytes ) sand_mem_alloc( nbytes, __FILE__, __LINE__ )
 
