@@ -67,16 +67,23 @@ static struct atom
 int sand_atom_length( const char* str )
 {
    struct atom* p;
+   unsigned long h = 0;
+   unsigned long i = 0;
 
    assert( str );
-   for ( size_t i = 0; i < NELEMS( buckets ); i++ )
+
+   for ( h = 0, i = 0; i < strlen( str ); i++ )
    {
-      for ( p = buckets[ i ]; p; p = p->link )
+      h = ( h << 1 ) + scatter[ ( unsigned char ) str[ i ] ];
+   }
+
+   h %= NELEMS( buckets );
+
+   for ( p = buckets[ h ]; p; p = p->link )
+   {
+      if ( p->str == str )
       {
-         if ( p->str == str )
-         {
-            return p->len;
-         }
+         return p->len;
       }
    }
 
