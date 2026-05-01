@@ -13,10 +13,6 @@ void tearDown( void )
 {
 }
 
-// =============================================================================
-// sand_atom_string  (from "C Interfaces and Implementations" by Hanson)
-// =============================================================================
-
 void test_atom_string_returns_non_null( void )
 {
     const char* a = sand_atom_string( "hello" );
