@@ -12,7 +12,8 @@ TESTCFLAGS = $(CFLAGS) -DUNITY_OUTPUT_COLOR -I$(UNITY_DIR)
 
 # Test binaries
 TEST_BINS = tests/test_sand_string tests/test_sand_string_view \
-            tests/test_sand_vector tests/test_atom
+            tests/test_sand_vector tests/test_atom                \
+            tests/test_except tests/test_mem tests/test_memchk
 
 all: $(LIB)
 
@@ -34,6 +35,15 @@ tests/test_sand_vector: tests/test_sand_vector.c Sand_vector.o $(UNITY_SRC)
 	$(CC) $(TESTCFLAGS) -DUNITY_INCLUDE_DOUBLE -o $@ $^
 
 tests/test_atom: tests/test_atom.c atom.o $(UNITY_SRC)
+	$(CC) $(TESTCFLAGS) -o $@ $^
+
+tests/test_except: tests/test_except.c except.o $(UNITY_SRC)
+	$(CC) $(TESTCFLAGS) -o $@ $^
+
+tests/test_mem: tests/test_mem.c mem.o except.o $(UNITY_SRC)
+	$(CC) $(TESTCFLAGS) -o $@ $^
+
+tests/test_memchk: tests/test_memchk.c memchk.o except.o $(UNITY_SRC)
 	$(CC) $(TESTCFLAGS) -o $@ $^
 
 test: $(TEST_BINS)

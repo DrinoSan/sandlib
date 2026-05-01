@@ -1,9 +1,9 @@
+#include "except.h"
+#include "mem.h"
 #include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-// #include "except.h"
-#include "mem.h"
 
 // checking types
 union align
@@ -30,6 +30,8 @@ union align
        ( sizeof( union align ) )
 
 // data
+const sand_except_t sand_mem_failed = { "Allocation Failed" };
+
 // checking data
 static struct descriptor
 {
@@ -64,7 +66,8 @@ void sand_mem_free( void* ptr, const char* file, int line )
       if ( ( ( uintptr_t ) ptr ) % ( sizeof( union align ) ) != 0 ||
            ( bp = find( ptr ) ) == NULL || bp->free )
       {
-         // sand_except_raise(&sand_assert_faild, file, line );
+         // sand_except_raise( &sand_assert_faild, file, line );
+         assert( 0 );
       }
 
       bp->free      = freelist.free;
@@ -83,7 +86,8 @@ void* sand_mem_resize( void* ptr, long nbytes, const char* file, int line )
    if ( ( ( uintptr_t ) ptr ) % ( sizeof( union align ) ) != 0 ||
         ( bp = find( ptr ) ) == NULL || bp->free )
    {
-      // sand_except_raise(&sand_assert_faild, file, line );
+      // sand_except_raise( &sand_assert_faild, file, line );
+      assert( 0 );
    }
 
    newptr = sand_mem_alloc( nbytes, file, line );
@@ -163,6 +167,14 @@ void* sand_mem_alloc( long nbytes, const char* file, int line )
          else
          {
             // raise sand_mem_faild
+            if ( file == NULL )
+            {
+               RAISE( sand_mem_failed );
+            }
+            else
+            {
+               sand_except_raise( &sand_mem_failed, file, line );
+            }
          }
       }
 
@@ -175,6 +187,14 @@ void* sand_mem_alloc( long nbytes, const char* file, int line )
                   NULL )
          {
             // raise sand_mem_failed
+            if ( file == NULL )
+            {
+               RAISE( sand_mem_failed );
+            }
+            else
+            {
+               sand_except_raise( &sand_mem_failed, file, line );
+            }
          }
 
          newptr->free  = freelist.free;

@@ -2,7 +2,7 @@
 #define MEM_INCLUDE
 // #include "except.h"
 
-// extern const sand_except_t Mem_Failed;
+extern const sand_except_t Mem_Failed;
 
 void* sand_mem_alloc( long nbytes, const char* file, int line );
 
