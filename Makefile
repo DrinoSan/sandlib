@@ -1,7 +1,7 @@
 CC     = gcc
 CFLAGS = -Wall -Wextra -std=c11
 
-SRCS = Sand_string.c Sand_vector.c Sand_string_view.c atom.c mem.c
+SRCS = Sand_string.c Sand_vector.c Sand_string_view.c atom.c mem.c memchk.c except.c
 OBJS = $(SRCS:.c=.o)
 LIB  = libsand.a
 

@@ -1,10 +1,10 @@
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
-// #include "exception.h"
+#include "except.h"
 #include "mem.h"
 
-// const sand_except_t sand_mem_failed = { "Allocation Failed" };
+const sand_except_t sand_mem_failed = { "Allocation Failed" };
 
 void* sand_mem_alloc( long nbytes, const char* file, int line )
 {
@@ -18,11 +18,11 @@ void* sand_mem_alloc( long nbytes, const char* file, int line )
       // raise sand_mem_failed
       if ( file == NULL )
       {
-         // RAISE(sand_mem_failed);
+         RAISE(sand_mem_failed);
       }
       else
       {
-         // sand_except_raise( &sand_mem_failed, file, line );
+         sand_except_raise( &sand_mem_failed, file, line );
       }
    }
 
@@ -41,11 +41,11 @@ void* sand_mem_calloc( long count, long nbytes, const char* file, int line )
    {
       if ( file == NULL )
       {
-         // RAISE(sand_mem_failed);
+         RAISE(sand_mem_failed);
       }
       else
       {
-         // sand_except_raise( &sand_mem_failed, file, line );
+         sand_except_raise( &sand_mem_failed, file, line );
       }
    }
 
@@ -70,11 +70,11 @@ void* sand_mem_resize( void* ptr, long nbytes, const char* file, int line )
    {
       if ( file == NULL )
       {
-         // RAISE(sand_mem_failed);
+         RAISE(sand_mem_failed);
       }
       else
       {
-         // sand_except_raise( &sand_mem_failed, file, line );
+         sand_except_raise( &sand_mem_failed, file, line );
       }
    }
 
