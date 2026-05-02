@@ -52,7 +52,7 @@ void* sand_mem_calloc( long count, long nbytes, const char* file, int line )
    return ptr;
 }
 
-void sand_meme_free( void* ptr, const char* file, int line )
+void sand_mem_free( void* ptr, const char* file, int line )
 {
    if ( ptr )
    {
