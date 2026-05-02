@@ -20,7 +20,7 @@ union align
 
 // checking macros
 #define hash( p, t )                                                           \
-   ( ( ( unsigned long ) ( p ) >> 3 ) &                                        \
+   ( ( ( unsigned long ) ( p ) >> 4 ) &                                        \
      ( sizeof( t ) / sizeof( ( t )[ 0 ] ) - 1 ) )
 
 #define NDESCRIPTORS 512
