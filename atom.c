@@ -7,7 +7,7 @@
 
 // SandLib Header
 #include "atom.h"
-// #include "mem.h"
+#include "mem.h"
 
 #define NELEMS( x ) ( ( sizeof( x ) ) / ( sizeof( ( x )[ 0 ] ) ) )
 
@@ -125,8 +125,7 @@ const char* sand_atom_new( const char* str, int len )
    }
 
    // Allocating new entry
-   p      = ( struct atom* ) malloc( sizeof( *p ) + len +
-                                     1 );   // ALLOC( sizeof( *p ) + len + 1 );
+   p      = ALLOC( sizeof( *p ) + len + 1 );
    p->len = len;
    p->str = ( char* ) ( p + 1 );
 
