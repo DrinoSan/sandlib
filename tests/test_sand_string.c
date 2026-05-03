@@ -50,12 +50,13 @@ void test_append_single_string( void )
     TEST_ASSERT_TRUE( s.capacity >= s.size );
 }
 
-void test_append_empty_string( void )
-{
-    sand_string_append( &s, "" );
-
-    TEST_ASSERT_EQUAL_INT32( 0, s.size );
-}
+// API does not allow empty strings
+//void test_append_empty_string( void )
+//{
+//    sand_string_append( &s, "" );
+//
+//    TEST_ASSERT_EQUAL_INT32( 0, s.size );
+//}
 
 void test_append_grows_capacity( void )
 {
@@ -291,7 +292,8 @@ int main( void )
 
     // append
     RUN_TEST( test_append_single_string );
-    RUN_TEST( test_append_empty_string );
+    // API DOES NOT ALLOW EMPYT STRINGS
+    //RUN_TEST( test_append_empty_string );
     RUN_TEST( test_append_grows_capacity );
 
     // append_n

@@ -52,6 +52,9 @@ void sand_string_append( Sand_string_t* string, const char* str )
 //------------------------------------------------------------------------------
 void sand_string_append_n( Sand_string_t* string, const char* str, size_t len )
 {
+   // I dont want strings of size 0 or smaller
+   assert( len > 0 );
+
    if ( ( int32_t ) ( string->size + len ) >= string->capacity )
    {
       sand_grow_string( string, len );
