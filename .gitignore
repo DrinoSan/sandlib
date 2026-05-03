@@ -1,3 +1,4 @@
 libsand.a
 *.o
 tags
+except.md
