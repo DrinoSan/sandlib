@@ -5,6 +5,13 @@ SRCS = Sand_string.c Sand_vector.c Sand_string_view.c atom.c mem.c memchk.c exce
 OBJS = $(SRCS:.c=.o)
 LIB  = libsand.a
 
+# Memory implementation: mem.o (production) or memchk.o (debug)
+ifdef DEBUG
+MEM_OBJ = memchk.o
+else
+MEM_OBJ = mem.o
+endif
+
 # Unity
 UNITY_DIR  = tests/unity/src
 UNITY_SRC  = $(UNITY_DIR)/unity.c
@@ -13,7 +20,8 @@ TESTCFLAGS = $(CFLAGS) -DUNITY_OUTPUT_COLOR -I$(UNITY_DIR)
 # Test binaries
 TEST_BINS = tests/test_sand_string tests/test_sand_string_view \
             tests/test_sand_vector tests/test_atom                \
-            tests/test_except tests/test_mem tests/test_memchk
+            tests/test_except tests/test_mem tests/test_memchk \
+            tests/test_arena
 
 all: $(LIB)
 
@@ -25,7 +33,7 @@ $(LIB): $(OBJS)
 
 # --- Tests -------------------------------------------------------------------
 
-tests/test_sand_string: tests/test_sand_string.c Sand_string.o $(UNITY_SRC)
+tests/test_sand_string: tests/test_sand_string.c Sand_string.o $(MEM_OBJ) except.o $(UNITY_SRC)
 	$(CC) $(TESTCFLAGS) -o $@ $^
 
 tests/test_sand_string_view: tests/test_sand_string_view.c Sand_string_view.o $(UNITY_SRC)
@@ -44,6 +52,9 @@ tests/test_mem: tests/test_mem.c mem.o except.o $(UNITY_SRC)
 	$(CC) $(TESTCFLAGS) -o $@ $^
 
 tests/test_memchk: tests/test_memchk.c memchk.o except.o $(UNITY_SRC)
+	$(CC) $(TESTCFLAGS) -o $@ $^
+
+tests/test_arena: tests/test_arena.c arena.o except.o $(UNITY_SRC)
 	$(CC) $(TESTCFLAGS) -o $@ $^
 
 test: $(TEST_BINS)

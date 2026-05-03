@@ -151,6 +151,34 @@ END_TRY;
 
 Exceptions are identified by **pointer**, not by value. Two `sand_except_t` variables with the same reason string are different exceptions.
 
+### Arena
+
+Memory arena (pool allocator) for bulk allocation and bulk deallocation. Allocations are fast bump-pointer advances. All memory is freed at once. Based on the Arena module from David Hanson's *C Interfaces and Implementations*.
+
+```c
+#include "arena.h"
+
+sand_arena_t* arena = sand_arena_new();
+
+int* nums = sand_arena_alloc(arena, 100 * sizeof(int), __FILE__, __LINE__);
+char* buf = sand_arena_calloc(arena, 1, 256, __FILE__, __LINE__);
+
+sand_arena_free(arena);     // free all allocations, keep the arena handle
+sand_arena_destroy(&arena); // free everything, sets arena = NULL
+```
+
+**Functions:**
+
+| Function | Description |
+|----------|-------------|
+| `sand_arena_new()` | Create a new arena |
+| `sand_arena_destroy(ap)` | Free all chunks and the arena, set pointer to NULL |
+| `sand_arena_alloc(arena, nbytes, file, line)` | Allocate `nbytes` from the arena |
+| `sand_arena_calloc(arena, count, nbytes, file, line)` | Allocate zeroed memory from the arena |
+| `sand_arena_free(arena)` | Free all chunks (arena handle survives for reuse) |
+
+Freed chunks are cached (up to 10) for reuse by future allocations, avoiding repeated `malloc`/`free` calls.
+
 ### Mem
 
 Checked memory allocation. Two implementations behind the same `mem.h` interface:
@@ -212,6 +240,7 @@ tests/
   test_except.c            17 tests
   test_mem.c                9 tests
   test_memchk.c            13 tests
+  test_arena.c             21 tests
 ```
 
 Run with `make test`. Output is color-coded (green = pass, red = fail).

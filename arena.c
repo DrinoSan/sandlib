@@ -25,17 +25,17 @@ union align
    long double ld;
 };
 
-union header
-{
-   struct T*   b;
-   union align a;
-};
-
 struct T
 {
    T*    prev;    // Pointing to the next arena memory chunk
    char* avail;   // Pointing to the chunks first free memory
    char* limit;   // Pointing past the chunks end
+};
+
+union header
+{
+   struct T b;
+   union align a;
 };
 
 static T*  freechunks;
