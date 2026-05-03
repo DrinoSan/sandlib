@@ -9,6 +9,13 @@
 //------------------------------------------------------------------------------
 void sand_grow_string( Sand_string_t* string, int32_t len )
 {
+   if( string->capacity == 0 )
+   {
+      // Need to call alloc first because RESIZE does not like a NULL ptr
+      string->capacity = 10;
+      string->data = ALLOC( string->capacity );
+   }
+
    if ( ( int32_t ) ( string->capacity * 2 ) <=
         ( int32_t ) ( string->size + len ) )
    {
