@@ -7,6 +7,8 @@
 
 #define T sand_arena_t
 
+#define THRESHOLD 10
+
 const sand_except_t sand_arena_new_failed = { "Arena Creation Failed" };
 const sand_except_t sand_arena_failed     = { "Arena Allocation Failed" };
 
@@ -78,7 +80,6 @@ void* sand_arena_alloc( T* arena, long nbytes, const char* file, int line )
       // get a new chunk
       T*    ptr;
       char* limit;
-      // ptr <- a new chunk
       if ( ( ptr = freechunks ) != NULL )
       {
          freechunks = freechunks->prev;
@@ -118,4 +119,41 @@ void* sand_arena_alloc( T* arena, long nbytes, const char* file, int line )
    arena->avail += nbytes;
 
    return arena->avail - nbytes;
+}
+
+void* sand_arena_calloc( T* arena, long count, long nbytes, const char* file, int line )
+{
+   void* ptr;
+
+   assert( count > 0 );
+   ptr = sand_arena_alloc( arena, count*nbytes, file, line );
+   memset( ptr, '\0', count*nbytes );
+
+   return ptr;
+}
+
+void sand_arena_free( T* arena )
+{
+   assert( arena );
+
+   while( arena->prev )
+   {
+      struct T tmp = *arena->prev;
+      // free the chunk
+      if( nfree < THRESHOLD )
+      {
+         arena->prev->prev = freechunks;
+         freechunks = arena->prev;
+         nfree++;
+         freechunks->limit = arena->limit;
+      }
+      else
+      {
+         free( arena->prev );
+      }
+      *arena = tmp;
+   }
+
+   assert( arena->limit == NULL );
+   assert( arena->avail == NULL );
 }
