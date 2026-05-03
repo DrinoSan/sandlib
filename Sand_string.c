@@ -9,18 +9,17 @@
 //------------------------------------------------------------------------------
 void sand_grow_string( Sand_string_t* string, int32_t len )
 {
-   // @TODO: why not just always append with len as len + size * 2
    if ( ( int32_t ) ( string->capacity * 2 ) <=
         ( int32_t ) ( string->size + len ) )
    {
       // I need to allocate more than just * 2
       string->capacity = string->capacity + len * 2;
-      string->data     = ALLOC( string->capacity );
-      assert( string->data != NULL );
-      return;
+   }
+   else
+   {
+      string->capacity *= 2;
    }
 
-   string->capacity *= 2;
    RESIZE( string->data, string->capacity );
    assert( string->data != NULL );
 }
