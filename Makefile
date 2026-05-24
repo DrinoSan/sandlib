@@ -42,7 +42,7 @@ tests/test_sand_string_view: tests/test_sand_string_view.c Sand_string_view.o $(
 tests/test_sand_vector: tests/test_sand_vector.c Sand_vector.o $(UNITY_SRC)
 	$(CC) $(TESTCFLAGS) -DUNITY_INCLUDE_DOUBLE -o $@ $^
 
-tests/test_atom: tests/test_atom.c atom.o $(UNITY_SRC)
+tests/test_atom: tests/test_atom.c atom.o $(MEM_OBJ) except.o $(UNITY_SRC)
 	$(CC) $(TESTCFLAGS) -o $@ $^
 
 tests/test_except: tests/test_except.c except.o $(UNITY_SRC)
