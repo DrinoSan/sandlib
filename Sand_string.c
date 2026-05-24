@@ -9,11 +9,11 @@
 //------------------------------------------------------------------------------
 void sand_grow_string( Sand_string_t* string, int32_t len )
 {
-   if( string->capacity == 0 )
+   if ( string->capacity == 0 )
    {
       // Need to call alloc first because RESIZE does not like a NULL ptr
       string->capacity = 10;
-      string->data = ALLOC( string->capacity );
+      string->data     = ALLOC( string->capacity );
    }
 
    if ( ( int32_t ) ( string->capacity * 2 ) <=
@@ -76,6 +76,94 @@ void sand_string_append_n( Sand_string_t* string, const char* str, size_t len )
 
    memcpy( string->data + string->size, str, len );
    string->size += len;
+}
+
+//------------------------------------------------------------------------------
+bool sand_string_has_prefix( Sand_string_t* string, const char* prefix )
+{
+   size_t prefix_len = strlen( prefix );
+   if ( ( size_t ) string->size < prefix_len )
+   {
+      return false;
+   }
+
+   for ( size_t i = 0; i < prefix_len; i++ )
+   {
+      if ( string->data[ i ] != prefix[ i ] )
+      {
+         return false;
+      }
+   }
+
+   return true;
+}
+
+//------------------------------------------------------------------------------
+bool sand_string_has_prefix_n( Sand_string_t* string, const char* prefix,
+                               size_t len )
+{
+   if ( ( size_t ) string->size < len )
+   {
+      return false;
+   }
+
+   for ( size_t i = 0; i < len; i++ )
+   {
+      if ( string->data[ i ] != prefix[ i ] )
+      {
+         return false;
+      }
+   }
+
+   return true;
+}
+
+//------------------------------------------------------------------------------
+bool sand_string_has_suffix( Sand_string_t* string, const char* prefix )
+{
+   size_t suffix_len = strlen( prefix );
+   if ( ( size_t ) string->size < suffix_len )
+   {
+      return false;
+   }
+
+   size_t i          = ( size_t ) string->size - suffix_len;
+   size_t suffix_idx = 0;
+   for ( ; i < ( size_t ) string->size; i++ )
+   {
+      if ( string->data[ i ] != prefix[ suffix_idx ] )
+      {
+         return false;
+      }
+
+      suffix_idx++;
+   }
+
+   return true;
+}
+
+//------------------------------------------------------------------------------
+bool sand_string_has_suffix_n( Sand_string_t* string, const char* prefix,
+                               size_t len )
+{
+   if ( ( size_t ) string->size < len )
+   {
+      return false;
+   }
+
+   size_t i          = ( size_t ) string->size - len;
+   size_t suffix_idx = 0;
+   for ( ; i < ( size_t ) string->size; i++ )
+   {
+      if ( string->data[ i ] != prefix[ suffix_idx ] )
+      {
+         return false;
+      }
+
+      suffix_idx++;
+   }
+
+   return true;
 }
 
 //------------------------------------------------------------------------------

@@ -279,6 +279,57 @@ void test_trim_cstr_specific_char( void )
 }
 
 // =============================================================================
+// HasPrefix hasSuffix tests
+// =============================================================================
+void test_prefix_positive( void )
+{
+    sand_string_append( &s, "hello" );
+
+    int has_prefix = sand_string_has_prefix( &s, "hel" );
+    TEST_ASSERT_TRUE( has_prefix );
+}
+
+void test_prefix_negative( void )
+{
+    sand_string_append( &s, "hello" );
+
+    int has_prefix = sand_string_has_prefix( &s, "hela" );
+    TEST_ASSERT_FALSE( has_prefix );
+}
+
+void test_prefix_too_long( void )
+{
+    sand_string_append( &s, "hello" );
+
+    int has_prefix = sand_string_has_prefix( &s, "hello world" );
+    TEST_ASSERT_FALSE( has_prefix );
+}
+
+void test_suffix_positive( void )
+{
+    sand_string_append( &s, "hello" );
+
+    int has_suffix = sand_string_has_suffix( &s, "llo" );
+    TEST_ASSERT_TRUE( has_suffix );
+}
+
+void test_suffix_negative( void )
+{
+    sand_string_append( &s, "hello" );
+
+    int has_suffix = sand_string_has_suffix( &s, "ella" );
+    TEST_ASSERT_FALSE( has_suffix );
+}
+
+void test_suffix_too_long( void )
+{
+    sand_string_append( &s, "hello" );
+
+    int has_suffix = sand_string_has_prefix( &s, "hello world" );
+    TEST_ASSERT_FALSE( has_suffix );
+}
+
+// =============================================================================
 // Main
 // =============================================================================
 
@@ -327,6 +378,15 @@ int main( void )
     RUN_TEST( test_right_trim_cstr_empty );
     RUN_TEST( test_trim_cstr_both_sides );
     RUN_TEST( test_trim_cstr_specific_char );
+
+    // Prefix tests
+    RUN_TEST( test_prefix_positive );
+    RUN_TEST( test_prefix_negative );
+    RUN_TEST( test_prefix_too_long );
+    // Suffix tests
+    RUN_TEST( test_suffix_positive );
+    RUN_TEST( test_suffix_negative );
+    RUN_TEST( test_suffix_too_long );
 
     return UNITY_END();
 }

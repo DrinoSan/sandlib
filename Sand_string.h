@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef struct
 {
@@ -24,6 +25,15 @@ void sand_string_append( Sand_string_t* string, const char* str );
 //------------------------------------------------------------------------------
 void sand_string_append_n( Sand_string_t* string, const char* str, size_t len );
 
+//------------------------------------------------------------------------------
+bool sand_string_has_prefix( Sand_string_t* string, const char* prefix );
+bool sand_string_has_prefix_n( Sand_string_t* string, const char* prefix, size_t len );
+
+//------------------------------------------------------------------------------
+bool sand_string_has_suffix( Sand_string_t* string, const char* prefix );
+bool sand_string_has_suffix_n( Sand_string_t* string, const char* prefix, size_t len );
+
+//------------------------------------ TRIM ------------------------------------
 //------------------------------------------------------------------------------
 void sand_string_left_trim( Sand_string_t* string, char ch );
 
