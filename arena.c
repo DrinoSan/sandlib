@@ -34,7 +34,7 @@ struct T
 
 union header
 {
-   struct T b;
+   struct T    b;
    union align a;
 };
 
@@ -121,13 +121,14 @@ void* sand_arena_alloc( T* arena, long nbytes, const char* file, int line )
    return arena->avail - nbytes;
 }
 
-void* sand_arena_calloc( T* arena, long count, long nbytes, const char* file, int line )
+void* sand_arena_calloc( T* arena, long count, long nbytes, const char* file,
+                         int line )
 {
    void* ptr;
 
    assert( count > 0 );
-   ptr = sand_arena_alloc( arena, count*nbytes, file, line );
-   memset( ptr, '\0', count*nbytes );
+   ptr = sand_arena_alloc( arena, count * nbytes, file, line );
+   memset( ptr, '\0', count * nbytes );
 
    return ptr;
 }
@@ -136,14 +137,14 @@ void sand_arena_free( T* arena )
 {
    assert( arena );
 
-   while( arena->prev )
+   while ( arena->prev )
    {
       struct T tmp = *arena->prev;
       // free the chunk
-      if( nfree < THRESHOLD )
+      if ( nfree < THRESHOLD )
       {
          arena->prev->prev = freechunks;
-         freechunks = arena->prev;
+         freechunks        = arena->prev;
          nfree++;
          freechunks->limit = arena->limit;
       }

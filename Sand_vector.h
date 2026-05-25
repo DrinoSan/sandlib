@@ -54,8 +54,7 @@ sand_list* sand_list_shrink_to_fit( sand_list* l );
 /// If memory allocation fails there is no need to continue
 /// @param: type_size needed for generic work
 /// @return: Pointer to empty list
-sand_list* sand_list_create( size_t type_size,
-                              void ( *freeElem )( void* ) );
+sand_list* sand_list_create( size_t type_size, void ( *freeElem )( void* ) );
 
 //-----------------------------------------------------------------------------
 void sand_list_free( sand_list* l );

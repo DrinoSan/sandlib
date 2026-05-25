@@ -9,9 +9,10 @@ typedef struct T T;
 extern const sand_except_t sand_arena_new_failed;
 extern const sand_except_t sand_arena_failed;
 
-T*    sand_arena_new( void );
+T* sand_arena_new( void );
 
-// T** needed because i am setting the pointer to NULL to avoid dangeling pointers
+// T** needed because i am setting the pointer to NULL to avoid dangeling
+// pointers
 void sand_arena_destroy( T** ap );
 
 void* sand_arena_alloc( T* arena, long nbytes, const char* file, int line );

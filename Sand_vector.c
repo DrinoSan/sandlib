@@ -159,8 +159,7 @@ sand_list* sand_list_shrink_to_fit( sand_list* l )
 }
 
 //-----------------------------------------------------------------------------
-sand_list* sand_list_create( size_t type_size,
-                              void ( *freeElem )( void* ) )
+sand_list* sand_list_create( size_t type_size, void ( *freeElem )( void* ) )
 {
    sand_list* l = calloc( 1, sizeof( sand_list ) );
    if ( l == NULL )
@@ -182,7 +181,7 @@ void sand_list_free( sand_list* l )
 {
    if ( l->freeElem != NULL )
    {
-      for ( int32_t i = 0; i < (int32_t)l->size; i++ )
+      for ( int32_t i = 0; i < ( int32_t ) l->size; i++ )
       {
          // elem points to a char* inside data, freeElem dereferences it to get
          // the actual string pointer and frees it

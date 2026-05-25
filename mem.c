@@ -1,8 +1,8 @@
+#include "mem.h"
+#include "except.h"
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include "except.h"
-#include "mem.h"
 
 const sand_except_t sand_mem_failed = { "Allocation Failed" };
 
@@ -18,7 +18,7 @@ void* sand_mem_alloc( long nbytes, const char* file, int line )
       // raise sand_mem_failed
       if ( file == NULL )
       {
-         RAISE(sand_mem_failed);
+         RAISE( sand_mem_failed );
       }
       else
       {
@@ -41,7 +41,7 @@ void* sand_mem_calloc( long count, long nbytes, const char* file, int line )
    {
       if ( file == NULL )
       {
-         RAISE(sand_mem_failed);
+         RAISE( sand_mem_failed );
       }
       else
       {
@@ -66,11 +66,11 @@ void* sand_mem_resize( void* ptr, long nbytes, const char* file, int line )
    assert( nbytes > 0 );
 
    ptr = realloc( ptr, nbytes );
-   if( ptr == NULL )
+   if ( ptr == NULL )
    {
       if ( file == NULL )
       {
-         RAISE(sand_mem_failed);
+         RAISE( sand_mem_failed );
       }
       else
       {

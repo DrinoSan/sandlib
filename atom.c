@@ -66,7 +66,7 @@ static struct atom
 // ----------------------------------------------------------------------------
 int sand_atom_length( const char* str )
 {
-   struct atom* p;
+   struct atom*  p;
    unsigned long h = 0;
    unsigned long i = 0;
 

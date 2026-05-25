@@ -1,7 +1,6 @@
 #ifndef ATOM_INCLUDED
 #define ATOM_INCLUDED
 
-
 // INTERFACE for ATOM improvement of Strings
 
 // ----------------------------------------------------------------------------

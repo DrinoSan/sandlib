@@ -159,7 +159,7 @@ bool sand_string_has_substr_n( Sand_string_t* string, const char* substr,
       return true;
    }
 
-   size_t limit = (size_t)string->size - substr_len;
+   size_t limit = ( size_t ) string->size - substr_len;
    for ( size_t i = 0; i <= limit; i++ )
    {
       if ( memcmp( string->data + i, substr, substr_len ) == 0 )

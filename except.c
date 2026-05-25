@@ -21,7 +21,7 @@ void sand_except_raise( const T* e, const char* file, int line )
       }
       else
       {
-         fprintf( stderr, " at %p", (void*)e );
+         fprintf( stderr, " at %p", ( void* ) e );
       }
 
       if ( file && line > 0 )
