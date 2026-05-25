@@ -329,6 +329,29 @@ void test_suffix_too_long( void )
     TEST_ASSERT_FALSE( has_suffix );
 }
 
+void test_substr_positive( void )
+{
+    sand_string_append( &s, "sandrino" );
+    bool has_substr = sand_string_has_substr( &s, "and" );
+
+    TEST_ASSERT_TRUE( has_substr );
+}
+
+void test_substr_negative( void )
+{
+    sand_string_append( &s, "sandrino" );
+    bool has_substr = sand_string_has_substr( &s, "andd" );
+
+    TEST_ASSERT_FALSE( has_substr );
+}
+
+void test_substr_too_long( void )
+{
+    sand_string_append( &s, "sandrino" );
+    bool has_substr = sand_string_has_substr( &s, "sandrino hello world" );
+
+    TEST_ASSERT_FALSE( has_substr );
+}
 // =============================================================================
 // Main
 // =============================================================================
@@ -387,6 +410,12 @@ int main( void )
     RUN_TEST( test_suffix_positive );
     RUN_TEST( test_suffix_negative );
     RUN_TEST( test_suffix_too_long );
+
+    // SubStr tests
+    RUN_TEST( test_substr_positive );
+    RUN_TEST( test_substr_negative );
+    RUN_TEST( test_substr_too_long );
+
 
     return UNITY_END();
 }

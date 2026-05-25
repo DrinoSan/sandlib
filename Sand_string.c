@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <ctype.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -82,20 +83,8 @@ void sand_string_append_n( Sand_string_t* string, const char* str, size_t len )
 bool sand_string_has_prefix( Sand_string_t* string, const char* prefix )
 {
    size_t prefix_len = strlen( prefix );
-   if ( ( size_t ) string->size < prefix_len )
-   {
-      return false;
-   }
 
-   for ( size_t i = 0; i < prefix_len; i++ )
-   {
-      if ( string->data[ i ] != prefix[ i ] )
-      {
-         return false;
-      }
-   }
-
-   return true;
+   return sand_string_has_prefix_n( string, prefix, prefix_len );
 }
 
 //------------------------------------------------------------------------------
@@ -122,24 +111,8 @@ bool sand_string_has_prefix_n( Sand_string_t* string, const char* prefix,
 bool sand_string_has_suffix( Sand_string_t* string, const char* prefix )
 {
    size_t suffix_len = strlen( prefix );
-   if ( ( size_t ) string->size < suffix_len )
-   {
-      return false;
-   }
 
-   size_t i          = ( size_t ) string->size - suffix_len;
-   size_t suffix_idx = 0;
-   for ( ; i < ( size_t ) string->size; i++ )
-   {
-      if ( string->data[ i ] != prefix[ suffix_idx ] )
-      {
-         return false;
-      }
-
-      suffix_idx++;
-   }
-
-   return true;
+   return sand_string_has_suffix_n( string, prefix, suffix_len );
 }
 
 //------------------------------------------------------------------------------
@@ -166,6 +139,37 @@ bool sand_string_has_suffix_n( Sand_string_t* string, const char* prefix,
    return true;
 }
 
+//------------------------------------------------------------------------------
+bool sand_string_has_substr( Sand_string_t* string, const char* substr )
+{
+   return sand_string_has_substr_n( string, substr, strlen( substr ) );
+}
+
+//------------------------------------------------------------------------------
+bool sand_string_has_substr_n( Sand_string_t* string, const char* substr,
+                               size_t substr_len )
+{
+   if ( ( size_t ) string->size < substr_len )
+   {
+      return false;
+   }
+
+   if ( substr_len == 0 )
+   {
+      return true;
+   }
+
+   size_t limit = (size_t)string->size - substr_len;
+   for ( size_t i = 0; i <= limit; i++ )
+   {
+      if ( memcmp( string->data + i, substr, substr_len ) == 0 )
+      {
+         return true;
+      }
+   }
+
+   return false;
+}
 //------------------------------------------------------------------------------
 void sand_string_left_trim( Sand_string_t* string, char ch )
 {
