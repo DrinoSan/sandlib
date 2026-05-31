@@ -33,6 +33,18 @@ sand_string_destroy(&s);
 | `sand_string_left_trim_cstr(str, ch)` | Left trim on raw `char*` |
 | `sand_string_right_trim_cstr(str, ch)` | Right trim on raw `char*` |
 | `sand_string_trim_cstr(str, ch)` | Trim both sides on raw `char*` |
+| TODO: Add new functions
+
+### sand_file
+
+Simple utility tools to read file into sand_string
+
+**Functions:**
+
+| Function | Description |
+|----------|-------------|
+| `sand_file_create( fp )` | Initialize empty sand_file_t |
+| `sand_file_open_and_read( fp, path )` | Read file content located at path into sand_file_t content member |
 
 ### Sand_string_view
 
