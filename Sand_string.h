@@ -20,6 +20,9 @@ void sand_string_create( Sand_string_t* string );
 void sand_string_destroy( Sand_string_t* string );
 
 //------------------------------------------------------------------------------
+void sand_string_clear( Sand_string_t* string );
+
+//------------------------------------------------------------------------------
 void sand_string_append( Sand_string_t* string, const char* str );
 
 //------------------------------------------------------------------------------
@@ -58,3 +61,4 @@ void sand_string_right_trim_cstr( char* string, char ch );
 
 //------------------------------------------------------------------------------
 void sand_string_trim_cstr( char* string, char ch );
+

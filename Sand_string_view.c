@@ -5,6 +5,13 @@
 #include "Sand_string_view.h"
 
 //------------------------------------------------------------------------------
+void sand_string_view_reset( sand_string_view_t* sv )
+{
+   sv->data = NULL;
+   sv->size = 0;
+}
+
+//------------------------------------------------------------------------------
 void sand_string_view_left_trim( sand_string_view_t* sv, char ch )
 {
    if ( sv->size == 0 )
@@ -91,4 +98,30 @@ void sand_string_view_trim( sand_string_view_t* sv, char ch )
       return;
    }
    sand_string_view_right_trim( sv, ch );
+}
+
+//------------------------------------------------------------------------------
+bool sand_string_view_has_substr( const sand_string_view_t* sv, const char* substr )
+{
+   size_t substr_len = strlen( substr );
+   if ( ( size_t ) sv->size < substr_len )
+   {
+      return false;
+   }
+
+   if ( substr_len == 0 )
+   {
+      return true;
+   }
+
+   size_t limit = ( size_t ) sv->size - substr_len;
+   for ( size_t i = 0; i <= limit; i++ )
+   {
+      if ( memcmp( sv->data + i, substr, substr_len ) == 0 )
+      {
+         return true;
+      }
+   }
+
+   return false;
 }

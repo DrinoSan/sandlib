@@ -51,6 +51,15 @@ void sand_string_destroy( Sand_string_t* string )
 }
 
 //------------------------------------------------------------------------------
+void sand_string_clear( Sand_string_t* string )
+{
+   memset( string, 0, sizeof( *string ) );
+   string->data     = NULL;
+   string->size     = 0;
+   string->capacity = 0;
+}
+
+//------------------------------------------------------------------------------
 void sand_string_append( Sand_string_t* string, const char* str )
 {
    sand_string_append_n( string, str, strlen( str ) );
@@ -335,3 +344,4 @@ void sand_string_trim_cstr( char* string, char ch )
    }
    sand_string_right_trim_cstr( string, ch );
 }
+
