@@ -4,3 +4,4 @@ tags
 except.md
 tests/test_*
 !tests/test_*.c
+.DS_Store
