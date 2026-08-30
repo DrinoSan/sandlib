@@ -17,3 +17,5 @@ void sand_string_view_left_trim( sand_string_view_t* sv, char ch );
 void sand_string_view_right_trim( sand_string_view_t* sv, char ch );
 
 bool sand_string_view_has_substr( const sand_string_view_t* sv, const char* substr );
+
+bool sand_string_view_has_substr_no_case( const sand_string_view_t* sv, const char* substr );

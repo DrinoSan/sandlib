@@ -101,7 +101,8 @@ void sand_string_view_trim( sand_string_view_t* sv, char ch )
 }
 
 //------------------------------------------------------------------------------
-bool sand_string_view_has_substr( const sand_string_view_t* sv, const char* substr )
+bool sand_string_view_has_substr( const sand_string_view_t* sv,
+                                  const char*               substr )
 {
    size_t substr_len = strlen( substr );
    if ( ( size_t ) sv->size < substr_len )
@@ -118,6 +119,55 @@ bool sand_string_view_has_substr( const sand_string_view_t* sv, const char* subs
    for ( size_t i = 0; i <= limit; i++ )
    {
       if ( memcmp( sv->data + i, substr, substr_len ) == 0 )
+      {
+         return true;
+      }
+   }
+
+   return false;
+}
+
+//------------------------------------------------------------------------------
+static char sand_string_view_to_lower( char ch )
+{
+   if ( ch >= 'A' && ch <= 'Z' )
+   {
+      return ch | 0x20;
+   }
+
+   return ch;
+}
+
+//------------------------------------------------------------------------------
+bool sand_string_view_has_substr_no_case( const sand_string_view_t* sv,
+                                          const char*               substr )
+{
+   size_t substr_len = strlen( substr );
+   if ( ( size_t ) sv->size < substr_len )
+   {
+      return false;
+   }
+
+   if ( substr_len == 0 )
+   {
+      return true;
+   }
+
+   size_t limit = ( size_t ) sv->size - substr_len;
+   for ( size_t i = 0; i <= limit; i++ )
+   {
+      bool found = true;
+      for ( size_t j = 0; j < substr_len; ++j )
+      {
+         if ( sand_string_view_to_lower( sv->data[ i + j ] ) !=
+              sand_string_view_to_lower( substr[ j ] ) )
+         {
+            found = false;
+            break;
+         }
+      }
+
+      if ( found == true )
       {
          return true;
       }
