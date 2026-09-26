@@ -12,6 +12,20 @@ void sand_string_view_reset( sand_string_view_t* sv )
 }
 
 //------------------------------------------------------------------------------
+void sand_string_view_set( sand_string_view_t* sv, const char* string )
+{
+   if( string == NULL )
+   {
+      sv->data = NULL;
+      sv->size = 0;
+      return;
+   }
+
+   sv->data = string;
+   sv->size = strlen( string );
+}
+
+//------------------------------------------------------------------------------
 void sand_string_view_left_trim( sand_string_view_t* sv, char ch )
 {
    if ( sv->size == 0 )
