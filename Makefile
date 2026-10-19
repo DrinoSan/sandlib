@@ -23,6 +23,8 @@ TEST_BINS = tests/test_sand_string tests/test_sand_string_view \
             tests/test_except tests/test_mem tests/test_memchk \
             tests/test_arena
 
+TEST_BINS += tests/test_sand_file
+
 all: $(LIB)
 
 $(LIB): $(OBJS)
@@ -55,6 +57,9 @@ tests/test_memchk: tests/test_memchk.c memchk.o except.o $(UNITY_SRC)
 	$(CC) $(TESTCFLAGS) -o $@ $^
 
 tests/test_arena: tests/test_arena.c arena.o except.o $(UNITY_SRC)
+	$(CC) $(TESTCFLAGS) -o $@ $^
+
+tests/test_sand_file: tests/test_sand_file.c sand_file.o Sand_string.o $(MEM_OBJ) except.o $(UNITY_SRC)
 	$(CC) $(TESTCFLAGS) -o $@ $^
 
 test: $(TEST_BINS)
