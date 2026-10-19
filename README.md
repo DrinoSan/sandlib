@@ -257,6 +257,24 @@ tests/
 
 Run with `make test`. Output is color-coded (green = pass, red = fail).
 
+## Regressionstests
+
+`tests/test_regressions.c` enthält Regressionstests für Memory-Safety-Fehler (Stand Commit `0b797dc`). Die Tests schlagen fehl, bis die Fehler behoben sind, und gehören deshalb nicht zu `make test`.
+
+```sh
+make test-regressions   # nur die Regressionstests bauen und ausführen
+make test-asan          # clean, danach make test und make test-regressions mit ASan und UBSan
+```
+
+`make test-asan` erweitert `CFLAGS` um `-g -O1 -fsanitize=address,undefined -fno-omit-frame-pointer`, gibt `-fsanitize=address,undefined` über `LDFLAGS` an den Linker und setzt `ASAN_OPTIONS=allocator_may_return_null=1`, weil `tests/test_mem` absichtlich eine sehr große Allokation anfordert.
+
+| Test | Abgedeckter Fehler |
+|------|--------------------|
+| `test_append_n_on_empty_copies_only_len_bytes` | `sand_string_append_n` (`Sand_string.c`, `strcpy`) kopiert bei leerem String bis zum NUL statt genau `len` Bytes |
+| `test_append_n_on_empty_does_not_overflow_with_long_source` | derselbe `strcpy` schreibt über den Heap-Puffer hinaus (Heap-Buffer-Overflow) |
+| `test_append_n_keeps_string_nul_terminated` | nach `append_n` fehlt die NUL-Terminierung; `trim` und `has_*` verlassen sich auf `strlen` |
+| `test_arena_calloc_rejects_count_times_size_overflow` | `sand_arena_calloc` (`arena.c`) prüft den Überlauf von `count * nbytes` nicht |
+
 ## References
 
 - David R. Hanson, *C Interfaces and Implementations: Techniques for Creating Reusable Software* (Addison-Wesley, 1996)

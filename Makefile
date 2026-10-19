@@ -72,9 +72,28 @@ test: $(TEST_BINS)
 	else \
 		echo "\033[1;31m  Suites passed: $$pass   failed: $$fail\033[0m"; \
 	fi; \
-	echo "\033[1m========================================\033[0m"
+	echo "\033[1m========================================\033[0m"; \
+	exit $$fail
 
 clean:
 	rm -f $(OBJS) $(LIB) $(TEST_BINS)
 
 .PHONY: all clean test
+
+# Regression tests are intentionally outside TEST_BINS: they fail until the
+# memory-safety bugs are fixed, so the default `make test` stays green.
+tests/test_regressions: tests/test_regressions.c Sand_string.o $(MEM_OBJ) except.o arena.o $(UNITY_SRC)
+	$(CC) $(TESTCFLAGS) $(LDFLAGS) -o $@ $^
+
+test-regressions: tests/test_regressions
+	./tests/test_regressions
+
+# Clean, then rerun the normal suite and the regression suite with ASan/UBSan.
+# ASAN_OPTIONS lets tests/test_mem request a huge allocation (malloc may return NULL).
+test-asan:
+	$(MAKE) clean
+	ASAN_OPTIONS=allocator_may_return_null=1 $(MAKE) test test-regressions \
+		CFLAGS="$(CFLAGS) -g -O1 -fsanitize=address,undefined -fno-omit-frame-pointer" \
+		LDFLAGS="$(LDFLAGS) -fsanitize=address,undefined"
+
+.PHONY: test-regressions test-asan
