@@ -245,7 +245,7 @@ Tests use the [Unity](https://github.com/ThrowTheSwitch/Unity) framework (cloned
 
 ```
 tests/
-  test_sand_string.c       67 tests
+  test_sand_string.c       68 tests
   test_sand_string_view.c  34 tests
   test_sand_vector.c       20 tests
   test_atom.c              23 tests

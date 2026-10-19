@@ -1,6 +1,5 @@
 #include "unity.h"
 
-#include <stdlib.h>
 #include <string.h>
 
 #include "../Sand_string.h"
@@ -395,16 +394,23 @@ void test_grow_preserves_existing_bytes( void )
 void test_clear_resets_to_zero( void )
 {
     sand_string_append( &s, "hello" );
-    // clear drops the buffer without freeing it.
-    char* orphan = s.data;
 
     sand_string_clear( &s );
 
-    TEST_ASSERT_NULL( s.data );
     TEST_ASSERT_EQUAL_INT32( 0, s.size );
-    TEST_ASSERT_EQUAL_INT32( 0, s.capacity );
+}
 
-    free( orphan );
+void test_clear_does_not_leak( void )
+{
+    TEST_IGNORE_MESSAGE(
+        "Bekannter Bug: sand_string_clear verliert Speicher "
+        "siehe DrinoSan/Fun docs/sandlib-TODO.md" );
+
+    sand_string_append( &s, "hello" );
+    sand_string_clear( &s );
+
+    TEST_ASSERT_NOT_NULL( s.data );
+    TEST_ASSERT_EQUAL_CHAR( '\0', s.data[ 0 ] );
 }
 
 // =============================================================================
@@ -723,6 +729,7 @@ int main( void )
 
     // clear
     RUN_TEST( test_clear_resets_to_zero );
+    RUN_TEST( test_clear_does_not_leak );
 
     // empty trim
     RUN_TEST( test_left_trim_empty_string );
