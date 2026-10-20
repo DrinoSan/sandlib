@@ -245,14 +245,15 @@ Tests use the [Unity](https://github.com/ThrowTheSwitch/Unity) framework (cloned
 
 ```
 tests/
-  test_sand_string.c       27 tests
-  test_sand_string_view.c  15 tests
+  test_sand_string.c       68 tests
+  test_sand_string_view.c  34 tests
   test_sand_vector.c       20 tests
   test_atom.c              23 tests
   test_except.c            17 tests
   test_mem.c                9 tests
   test_memchk.c            13 tests
   test_arena.c             21 tests
+  test_sand_file.c          6 tests
 ```
 
 Run with `make test`. Output is color-coded (green = pass, red = fail).

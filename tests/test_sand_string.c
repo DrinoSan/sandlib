@@ -352,6 +352,312 @@ void test_substr_too_long( void )
 
     TEST_ASSERT_FALSE( has_substr );
 }
+
+// =============================================================================
+// sand_grow_string
+// =============================================================================
+
+void test_grow_from_empty( void )
+{
+    sand_grow_string( &s, 4 );
+
+    TEST_ASSERT_NOT_NULL( s.data );
+    TEST_ASSERT_EQUAL_INT32( 0, s.size );
+    TEST_ASSERT_TRUE( s.capacity >= 4 );
+}
+
+void test_grow_zero_length( void )
+{
+    sand_grow_string( &s, 0 );
+
+    TEST_ASSERT_NOT_NULL( s.data );
+    TEST_ASSERT_EQUAL_INT32( 0, s.size );
+    TEST_ASSERT_TRUE( s.capacity > 0 );
+}
+
+void test_grow_preserves_existing_bytes( void )
+{
+    sand_string_append( &s, "hello" );
+    int32_t cap = s.capacity;
+
+    sand_grow_string( &s, 100 );
+
+    TEST_ASSERT_TRUE( s.capacity > cap );
+    TEST_ASSERT_EQUAL_INT32( 5, s.size );
+    TEST_ASSERT_EQUAL_INT( 0, memcmp( s.data, "hello", 5 ) );
+}
+
+// =============================================================================
+// sand_string_clear
+// =============================================================================
+
+void test_clear_resets_to_zero( void )
+{
+    sand_string_append( &s, "hello" );
+
+    sand_string_clear( &s );
+
+    TEST_ASSERT_EQUAL_INT32( 0, s.size );
+}
+
+void test_clear_does_not_leak( void )
+{
+    TEST_IGNORE_MESSAGE(
+        "Bekannter Bug: sand_string_clear verliert Speicher "
+        "siehe DrinoSan/Fun docs/sandlib-TODO.md" );
+
+    sand_string_append( &s, "hello" );
+    sand_string_clear( &s );
+
+    TEST_ASSERT_NOT_NULL( s.data );
+    TEST_ASSERT_EQUAL_CHAR( '\0', s.data[ 0 ] );
+}
+
+// =============================================================================
+// trim on an empty Sand_string
+// =============================================================================
+
+void test_left_trim_empty_string( void )
+{
+    TEST_IGNORE_MESSAGE(
+        "Bekannter Bug: sand_string_left_trim auf leerem String "
+        "dereferenziert NULL siehe DrinoSan/Fun docs/sandlib-TODO.md" );
+
+    sand_string_left_trim( &s, 0 );
+
+    TEST_ASSERT_NULL( s.data );
+    TEST_ASSERT_EQUAL_INT32( 0, s.size );
+}
+
+void test_right_trim_empty_string( void )
+{
+    TEST_IGNORE_MESSAGE(
+        "Bekannter Bug: trim auf leerem String ruft strlen(NULL) auf "
+        "siehe DrinoSan/Fun docs/sandlib-TODO.md" );
+
+    sand_string_right_trim( &s, 0 );
+
+    TEST_ASSERT_NULL( s.data );
+    TEST_ASSERT_EQUAL_INT32( 0, s.size );
+}
+
+void test_trim_empty_string( void )
+{
+    TEST_IGNORE_MESSAGE(
+        "Bekannter Bug: sand_string_trim auf leerem String ruft "
+        "sand_string_left_trim auf, das NULL dereferenziert "
+        "siehe DrinoSan/Fun docs/sandlib-TODO.md" );
+
+    sand_string_trim( &s, 0 );
+
+    TEST_ASSERT_NULL( s.data );
+    TEST_ASSERT_EQUAL_INT32( 0, s.size );
+}
+
+void test_trim_cstr_empty( void )
+{
+    char buf[] = "";
+
+    sand_string_trim_cstr( buf, 0 );
+
+    TEST_ASSERT_EQUAL_STRING( "", buf );
+}
+
+// =============================================================================
+// sand_string_has_prefix_n / empty prefix
+// =============================================================================
+
+void test_prefix_empty_string( void )
+{
+    TEST_ASSERT_FALSE( sand_string_has_prefix( &s, "a" ) );
+    TEST_ASSERT_TRUE( sand_string_has_prefix( &s, "" ) );
+}
+
+void test_prefix_n_positive( void )
+{
+    sand_string_append( &s, "hello" );
+
+    TEST_ASSERT_TRUE( sand_string_has_prefix_n( &s, "hel", 3 ) );
+}
+
+void test_prefix_n_negative( void )
+{
+    sand_string_append( &s, "hello" );
+
+    TEST_ASSERT_FALSE( sand_string_has_prefix_n( &s, "hex", 3 ) );
+}
+
+void test_prefix_n_too_long( void )
+{
+    sand_string_append( &s, "hello" );
+
+    TEST_ASSERT_FALSE( sand_string_has_prefix_n( &s, "hello!", 6 ) );
+}
+
+void test_prefix_n_zero_length( void )
+{
+    char raw[ 1 ] = { 'Z' };
+
+    sand_string_append( &s, "hello" );
+
+    TEST_ASSERT_TRUE( sand_string_has_prefix_n( &s, raw, 0 ) );
+}
+
+void test_prefix_n_empty_string( void )
+{
+    TEST_ASSERT_FALSE( sand_string_has_prefix_n( &s, "h", 1 ) );
+    TEST_ASSERT_TRUE( sand_string_has_prefix_n( &s, "h", 0 ) );
+}
+
+void test_prefix_n_unterminated( void )
+{
+    char raw[ 4 ] = { 'h', 'e', 'X', 'Y' };
+
+    sand_string_append( &s, "hello" );
+
+    TEST_ASSERT_TRUE( sand_string_has_prefix_n( &s, raw, 2 ) );
+    TEST_ASSERT_FALSE( sand_string_has_prefix_n( &s, raw, 3 ) );
+}
+
+// =============================================================================
+// sand_string_has_suffix_n / empty suffix
+// =============================================================================
+
+void test_suffix_empty_string( void )
+{
+    TEST_ASSERT_FALSE( sand_string_has_suffix( &s, "a" ) );
+    TEST_ASSERT_TRUE( sand_string_has_suffix( &s, "" ) );
+}
+
+void test_suffix_n_positive( void )
+{
+    sand_string_append( &s, "hello" );
+
+    TEST_ASSERT_TRUE( sand_string_has_suffix_n( &s, "llo", 3 ) );
+}
+
+void test_suffix_n_negative( void )
+{
+    sand_string_append( &s, "hello" );
+
+    TEST_ASSERT_FALSE( sand_string_has_suffix_n( &s, "lla", 3 ) );
+}
+
+void test_suffix_n_too_long( void )
+{
+    sand_string_append( &s, "hello" );
+
+    TEST_ASSERT_FALSE( sand_string_has_suffix_n( &s, "hello!", 6 ) );
+}
+
+void test_suffix_n_zero_length( void )
+{
+    char raw[ 1 ] = { 'Z' };
+
+    sand_string_append( &s, "hello" );
+
+    TEST_ASSERT_TRUE( sand_string_has_suffix_n( &s, raw, 0 ) );
+}
+
+void test_suffix_n_empty_string( void )
+{
+    TEST_ASSERT_FALSE( sand_string_has_suffix_n( &s, "o", 1 ) );
+    TEST_ASSERT_TRUE( sand_string_has_suffix_n( &s, "o", 0 ) );
+}
+
+void test_suffix_n_unterminated( void )
+{
+    char raw[ 4 ] = { 'l', 'l', 'o', 'X' };
+
+    sand_string_append( &s, "hello" );
+
+    TEST_ASSERT_TRUE( sand_string_has_suffix_n( &s, raw, 3 ) );
+    TEST_ASSERT_FALSE( sand_string_has_suffix_n( &s, raw, 4 ) );
+}
+
+void test_suffix_n_honors_size( void )
+{
+    sand_string_append( &s, "hello!" );
+    s.size = 5;
+
+    TEST_ASSERT_TRUE( sand_string_has_suffix_n( &s, "llo", 3 ) );
+    TEST_ASSERT_FALSE( sand_string_has_suffix_n( &s, "o!", 2 ) );
+}
+
+// =============================================================================
+// sand_string_has_substr_n / empty substr
+// =============================================================================
+
+void test_substr_empty_string( void )
+{
+    TEST_ASSERT_FALSE( sand_string_has_substr( &s, "a" ) );
+    TEST_ASSERT_TRUE( sand_string_has_substr( &s, "" ) );
+}
+
+void test_substr_zero_length_needle( void )
+{
+    sand_string_append( &s, "sand" );
+
+    TEST_ASSERT_TRUE( sand_string_has_substr( &s, "" ) );
+}
+
+void test_substr_n_positive( void )
+{
+    sand_string_append( &s, "sandrino" );
+
+    TEST_ASSERT_TRUE( sand_string_has_substr_n( &s, "and", 3 ) );
+}
+
+void test_substr_n_negative( void )
+{
+    sand_string_append( &s, "sandrino" );
+
+    TEST_ASSERT_FALSE( sand_string_has_substr_n( &s, "andd", 4 ) );
+}
+
+void test_substr_n_too_long( void )
+{
+    sand_string_append( &s, "sandrino" );
+
+    TEST_ASSERT_FALSE(
+        sand_string_has_substr_n( &s, "sandrino hello", 14 ) );
+}
+
+void test_substr_n_zero_length( void )
+{
+    char raw[ 1 ] = { 'Z' };
+
+    sand_string_append( &s, "sandrino" );
+
+    TEST_ASSERT_TRUE( sand_string_has_substr_n( &s, raw, 0 ) );
+}
+
+void test_substr_n_empty_string( void )
+{
+    TEST_ASSERT_FALSE( sand_string_has_substr_n( &s, "a", 1 ) );
+    TEST_ASSERT_TRUE( sand_string_has_substr_n( &s, "a", 0 ) );
+}
+
+void test_substr_n_unterminated( void )
+{
+    char raw[ 4 ] = { 'a', 'n', 'd', 'X' };
+
+    sand_string_append( &s, "sandrino" );
+
+    TEST_ASSERT_TRUE( sand_string_has_substr_n( &s, raw, 3 ) );
+    TEST_ASSERT_FALSE( sand_string_has_substr_n( &s, raw, 4 ) );
+}
+
+void test_substr_n_honors_size( void )
+{
+    sand_string_append( &s, "sandX" );
+    s.size = 4;
+
+    TEST_ASSERT_TRUE( sand_string_has_substr_n( &s, "sand", 4 ) );
+    TEST_ASSERT_FALSE( sand_string_has_substr_n( &s, "X", 1 ) );
+    TEST_ASSERT_FALSE( sand_string_has_substr_n( &s, "dX", 2 ) );
+}
+
 // =============================================================================
 // Main
 // =============================================================================
@@ -416,6 +722,50 @@ int main( void )
     RUN_TEST( test_substr_negative );
     RUN_TEST( test_substr_too_long );
 
+    // grow
+    RUN_TEST( test_grow_from_empty );
+    RUN_TEST( test_grow_zero_length );
+    RUN_TEST( test_grow_preserves_existing_bytes );
+
+    // clear
+    RUN_TEST( test_clear_resets_to_zero );
+    RUN_TEST( test_clear_does_not_leak );
+
+    // empty trim
+    RUN_TEST( test_left_trim_empty_string );
+    RUN_TEST( test_right_trim_empty_string );
+    RUN_TEST( test_trim_empty_string );
+    RUN_TEST( test_trim_cstr_empty );
+
+    // prefix_n
+    RUN_TEST( test_prefix_empty_string );
+    RUN_TEST( test_prefix_n_positive );
+    RUN_TEST( test_prefix_n_negative );
+    RUN_TEST( test_prefix_n_too_long );
+    RUN_TEST( test_prefix_n_zero_length );
+    RUN_TEST( test_prefix_n_empty_string );
+    RUN_TEST( test_prefix_n_unterminated );
+
+    // suffix_n
+    RUN_TEST( test_suffix_empty_string );
+    RUN_TEST( test_suffix_n_positive );
+    RUN_TEST( test_suffix_n_negative );
+    RUN_TEST( test_suffix_n_too_long );
+    RUN_TEST( test_suffix_n_zero_length );
+    RUN_TEST( test_suffix_n_empty_string );
+    RUN_TEST( test_suffix_n_unterminated );
+    RUN_TEST( test_suffix_n_honors_size );
+
+    // substr_n
+    RUN_TEST( test_substr_empty_string );
+    RUN_TEST( test_substr_zero_length_needle );
+    RUN_TEST( test_substr_n_positive );
+    RUN_TEST( test_substr_n_negative );
+    RUN_TEST( test_substr_n_too_long );
+    RUN_TEST( test_substr_n_zero_length );
+    RUN_TEST( test_substr_n_empty_string );
+    RUN_TEST( test_substr_n_unterminated );
+    RUN_TEST( test_substr_n_honors_size );
 
     return UNITY_END();
 }
